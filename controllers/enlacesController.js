@@ -11,10 +11,10 @@ exports.nuevoEnlance = async (req, res, next) => {
   }
 
   // Objeto de enlace
-  const { nombre_original } = req.body;
+  const { nombre_original, nombre } = req.body;
   const enlace = new Enlace();
   enlace.url = shortid.generate();
-  enlace.nombre = shortid.generate();
+  enlace.nombre = nombre;
   enlace.nombre_original = nombre_original;
 
   // Si el usuario esta autenticado
