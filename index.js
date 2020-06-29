@@ -16,6 +16,8 @@ app.use(cors(corsOptions));
 const port = process.env.PORT || 4000;
 // Body parser
 app.use(express.json());
+// Habilitar carpeta publica
+app.use(express.static('uploads'));
 // Rutas
 app.use("/api/usuarios", require("./routes/usuarios"));
 app.use("/api/auth", require("./routes/auth"));
