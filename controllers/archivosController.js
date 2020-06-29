@@ -1,4 +1,4 @@
-const Usuario = require("../models/Usuario");
+const Enlace = require("../models/Enlace");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config({ path: ".env" });
@@ -45,3 +45,25 @@ exports.eliminarArchivo = async (req, res) => {
     console.log(error);
   }
 };
+
+exports.descargar = async (req, res, next) => {
+  // Obtiene el enlace
+  const { archivo } = req.params;
+  const enlace = await Enlace.findOne({nombre: archivo });
+
+  const archivoDescarga = __dirname + '/../uploads/' + archivo;
+  res.download(archivoDescarga);
+  // Eliminar archivo y entrada de db
+  // Verificar descargas < 1 || > 1
+  const { descargas, nombre } = enlace;
+  if (descargas === 1) {
+    // Eliminar el archivo
+    req.archivo = nombre;
+    // Eliminar la entrada de la db
+    await Enlace.findOneAndRemove(enlace.id);
+    next();
+  } else {
+    enlace.descargas--;
+    await enlace.save();
+  }
+}
